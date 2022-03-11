@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>Ebay Scrapper</title>
+
+    <!-- Latest compiled and minified CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
+
+
+
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="container">
+        <div class="row">
+           <div class="col-md-1"></div> 
+           <div class="col-md-10">
+            <form action="{{ url_for('posts') }}" method="post" id="frm" enctype="multipart/form-data">
+                <div class="row">
+                  <div class="col-5">
+                    <div class="form-group">
+                      <!-- <div class="text-center my-2">
+                        <h3>Search tags</h3>
+                      </div> -->
+                      <h4>Phase 1: Google Map Scrapping</h4>
+                      <div class="border border-danger border-3 rounded-pill mb-2" style="overflow-x: hidden;">
+                        
+                        <input type="hidden" name="action" value="start">
+                        <input type="file" class="form-control" aria-describedby="textHelp" name="keys" placeholder="Choose Keywords file..." required="true">
+                      </div>
+                      <div class="d-flex mb-2 justify-content-start">
+                        <div class="mx-3">
+                          <h4>Limit:</h4>
+                        </div>
+                        <div class="border border-danger border-3 rounded-pill" style="overflow-x: hidden;">
+                          <input type="number" class="form-control" aria-describedby="textHelp" name="limit" value="100" min="1">
+                        </div>
+                      </div>
+                      <h4>Phase 2: Auto Wordpress Drafting</h4>
+                      <h4 >Wordpress URL:</h4>
+                      <div class="border border-danger border-3 rounded-pill mb-2" style="overflow-x: hidden;">
+                        <input type="text" class="form-control" aria-describedby="textHelp" name="url" placeholder="" required="true">
+                      </div>
+                      <h4>Username:</h4>
+                      <div class="border border-danger border-3 rounded-pill mb-2" style="overflow-x: hidden;">
+                        <input type="text" class="form-control" aria-describedby="textHelp" name="username" placeholder="" required="true">
+                      </div>
+                      <h4>Password:</h4>
+                      <div class="border border-danger border-3 rounded-pill mb-2" style="overflow-x: hidden;">
+                        <input type="password" class="form-control" aria-describedby="textHelp" name="password" placeholder="" required="true">
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-7">
+                    <h4>Introduction Template (Optional):</h4>
+                    <div class="border border-danger border-3 mb-2" style="overflow-x: hidden; border-radius: 20px;">
+                      <textarea type="text" class="form-control" aria-describedby="textHelp" name="intro" rows="5"></textarea>
+                    </div>
+                    <h4>Ending Template (Optional):</h4>
+                    <div class="border border-danger border-3 mb-2" style="overflow-x: hidden; border-radius: 20px;">
+                      <textarea type="text" class="form-control" aria-describedby="textHelp" name="end" rows="5"></textarea>
+                    </div>
+
+                  </div>
+                </div>
+            </form>
+            
+            <div class="row mt-3">
+              <div class="d-flex justify-content-center">
+                
+                <div >
+                  <!-- <form action="{{ url_for('posts') }}"  method="post"> -->
+                    <div class="border border-danger border-3 mx-2" style="overflow-x: hidden; border-radius: 10px;">
+                      <button type="button" class="btn" id="start" onclick="submit_frm()" style="padding: 8px 35px;font-size: 20px; font-weight: bold;">Start</button>
+                    </div>
+                  <!-- </form> -->
+                </div>
+                <div >
+                  <form action="{{ url_for('posts') }}"  method="post">
+                    <input type="hidden" name="action" value="killprocess">
+                    <div class="border border-danger border-3 mx-2" style="overflow-x: hidden; border-radius: 10px;">
+                      <button type="submit" class="btn" style="padding: 8px 35px; font-size: 20px; font-weight: bold;">Stop</button>
+                    </div>
+                  </form>
+                </div>
+                <div >
+                  <form action="{{ url_for('posts') }}"  method="post">
+                    <input type="hidden" name="action" value="reset">
+                    <div class="border border-danger border-3 mx-2" style="overflow-x: hidden; border-radius: 10px;">
+                      <button type="submit" class="btn" onclick="reset_frm()" style="padding: 8px 35px; font-size: 20px; font-weight: bold;">Reset</button>
+                    </div>
+                  </form>
+                </div>
+                
+              </div>
+            </div>
+           </div> 
+           <div class="col-md-1"></div> 
+        </div>
+        <div class="row p-4">
+          <p class="text-center" style="width: 100%;font-weight: bold" id="progress"></p>
+        </div>
+    </div>
+
+    <script>
+      function submit_frm(){
+
+        document.getElementById("frm").submit();
+        localStorage.setItem("status", "start");
+      }
+      function reset_frm(){
+
+        document.getElementById("frm").reset();
+        localStorage.setItem("status", "stop");
+      }
+      setInterval(() => {
+        if(localStorage.getItem("status")=="start"){
+          check() 
+        }
+      }, 1000);
+      function check(){
+        fetch('/update')
+        .then(res=>res.text())
+        .then(data=>{
+          if(data!='stop'){
+             document.querySelector('#progress').innerText = data
+          }
+      })
+      }
+     
+    </script>
+
+  </body>
+</html>
